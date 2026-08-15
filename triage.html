@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="薬剤師向けOTCトリアージ支援ツール。症状別のレッドフラッグ確認から、受診勧奨・OTC対応（成分群）までを段階的に判断補助します。">
+<meta name="theme-color" content="#fbfbf9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#101613" media="(prefers-color-scheme: dark)">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>OTCトリアージ支援｜ヤクデスク</title>
+<style>
+:root{
+  --paper:#fbfbf9; --card:#ffffff; --ink:#17211d; --muted:#5c6862;
+  --green:#0b7a53; --green-soft:#e7f2ec; --blue-soft:#edf3f8; --blue:#3d6a8f;
+  --amber:#a35c0a; --amber-soft:#fbf1e2; --red:#b0362f; --red-soft:#faeceb;
+  --line:#e4e6e3; --line-strong:#c9cdc9;
+  --serif:"Hiragino Mincho ProN","Hiragino Mincho Pro","Yu Mincho","YuMincho","Noto Serif JP",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Yu Gothic","Noto Sans JP",sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --paper:#101613; --card:#171f1b; --ink:#eef2ef; --muted:#9aa69f;
+    --green:#43bf8f; --green-soft:#12271f; --blue-soft:#16222b; --blue:#8db4d4;
+    --amber:#dfa04a; --amber-soft:#2a2013; --red:#e08079; --red-soft:#2c1a19;
+    --line:#2a332e; --line-strong:#3b463f; }
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans);
+  font-size:16px; line-height:1.8; -webkit-font-smoothing:antialiased}
+a{color:var(--green)}
+:focus-visible{outline:2px solid var(--green); outline-offset:2px}
+header{position:sticky; top:0; background:color-mix(in srgb, var(--paper) 88%, transparent);
+  -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); z-index:10}
+.hwrap{max-width:760px; margin:0 auto; padding:10px 20px; display:flex; align-items:center; gap:9px}
+.hwrap svg{width:20px; height:20px; fill:var(--green)}
+.hwrap a{font-family:var(--serif); font-size:1.1rem; font-weight:600; letter-spacing:.12em;
+  color:var(--ink); text-decoration:none; display:flex; align-items:center; gap:9px}
+.hsub{font-size:.7rem; color:var(--muted); margin-left:auto; letter-spacing:.06em}
+main{max-width:760px; margin:0 auto; padding:22px 20px 70px}
+
+.beta{background:var(--amber-soft); border:1px solid color-mix(in srgb, var(--amber) 40%, transparent);
+  color:var(--amber); border-radius:12px; padding:10px 14px; font-size:.78rem; margin-bottom:14px}
+.disc{background:var(--blue-soft); border-radius:12px; padding:10px 14px; font-size:.76rem; color:var(--ink); margin-bottom:22px}
+
+h1{font-family:var(--serif); font-weight:600; font-size:clamp(1.35rem,4.2vw,1.7rem); letter-spacing:.05em; margin:4px 0 8px}
+.lead{color:var(--muted); font-size:.88rem; margin:0 0 18px}
+.stepmark{font-family:var(--mono); font-size:.66rem; letter-spacing:.18em; color:var(--green); margin:0 0 4px}
+h2.q{font-family:var(--serif); font-weight:600; font-size:1.08rem; letter-spacing:.05em; margin:0 0 4px}
+.qsub{font-size:.8rem; color:var(--muted); margin:0 0 14px}
+
+.modgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px}
+.modbtn{font-family:var(--sans); text-align:left; cursor:pointer; background:var(--card);
+  border:1px solid var(--line); border-radius:13px; padding:14px 15px; min-height:64px; color:var(--ink)}
+.modbtn:hover{border-color:var(--green)}
+.modbtn b{display:block; font-size:.96rem}
+.modbtn span{font-size:.7rem; color:var(--muted)}
+
+.cklist{display:flex; flex-direction:column; gap:8px; margin:0 0 16px}
+.ck{display:flex; gap:11px; align-items:flex-start; background:var(--card); border:1px solid var(--line);
+  border-radius:12px; padding:12px 14px; cursor:pointer; font-size:.9rem}
+.ck input{width:20px; height:20px; margin:3px 0 0; accent-color:var(--red); flex:none}
+.ck.dr input{accent-color:var(--amber)}
+.ck:has(input:checked){border-color:var(--red); background:var(--red-soft)}
+.ck.dr:has(input:checked){border-color:var(--amber); background:var(--amber-soft)}
+
+.typegrid{display:flex; flex-direction:column; gap:8px; margin-bottom:16px}
+.typebtn{font-family:var(--sans); text-align:left; cursor:pointer; background:var(--card);
+  border:1px solid var(--line); border-radius:12px; padding:13px 15px; font-size:.9rem; color:var(--ink)}
+.typebtn:hover{border-color:var(--green); color:var(--green)}
+
+.btnrow{display:flex; gap:9px; flex-wrap:wrap}
+.btn{font-family:var(--sans); cursor:pointer; border-radius:11px; padding:12px 18px; font-size:.9rem;
+  border:1px solid var(--line-strong); background:var(--card); color:var(--ink); min-height:46px}
+.btn.primary{background:var(--green); border-color:var(--green); color:#fff}
+.btn.primary:hover{opacity:.92}
+.btn.ghost{background:transparent}
+
+.verdict{border-radius:15px; padding:17px 19px; margin-bottom:16px; border:1.5px solid}
+.v-er{background:var(--red-soft); border-color:var(--red)}
+.v-dr{background:var(--amber-soft); border-color:var(--amber)}
+.v-ok{background:var(--green-soft); border-color:var(--green)}
+.verdict .vt{font-family:var(--serif); font-weight:700; font-size:1.15rem; letter-spacing:.05em; margin:0 0 4px}
+.v-er .vt{color:var(--red)} .v-dr .vt{color:var(--amber)} .v-ok .vt{color:var(--green)}
+.verdict p{margin:4px 0; font-size:.88rem}
+.hitlist{margin:8px 0 0; padding-left:20px; font-size:.85rem}
+.hitlist li{margin:3px 0}
+
+.reccard{background:var(--card); border:1px solid var(--line); border-radius:13px; padding:15px 17px; margin-bottom:12px}
+.reccard h3{margin:0 0 8px; font-size:.95rem; font-family:var(--serif); letter-spacing:.04em;
+  padding-bottom:6px; border-bottom:3px double var(--line-strong)}
+.gline{margin:9px 0; font-size:.87rem}
+.gline b{display:block}
+.gline span{font-size:.78rem; color:var(--muted)}
+.notes{margin:8px 0 0; padding-left:20px; font-size:.8rem; color:var(--muted)}
+.notes li{margin:3px 0}
+.confirm{background:var(--blue-soft); border-radius:12px; padding:13px 16px; font-size:.8rem; margin-bottom:12px}
+.confirm b{display:block; margin-bottom:5px; font-size:.84rem}
+.confirm ul{margin:0; padding-left:19px}
+.confirm li{margin:3px 0}
+
+footer{border-top:1px solid var(--line)}
+.fwrap{max-width:760px; margin:0 auto; padding:20px; font-size:.74rem; color:var(--muted)}
+.fwrap a{color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <a href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/></svg>ヤクデスク</a>
+    <span class="hsub">OTCトリアージ支援</span>
+  </div>
+</header>
+<main>
+  <div id="beta-banner" class="beta">β版（薬剤師レビュー前のドラフト）── 本ツールの医学的内容は、公開前に管理薬剤師による確認が必要です。確認完了後、ファイル内の REVIEWED を true に変更するとこの表示は消えます。</div>
+  <div class="disc"><b>本ツールは薬剤師・登録販売者の判断を補助する参考情報であり、診断を行うものではありません。</b>最終判断は専門職の判断と最新の添付文書・ガイドラインに基づいてください。緊急性が疑われる場合は、ためらわず受診・救急要請を案内してください。</div>
+  <div id="app"></div>
+</main>
+<footer><div class="fwrap">© 2026 ヤクデスク ｜ <a href="index.html#about">このサイトについて</a> ｜ 成分群は例示であり、個別製品の適否は添付文書で確認してください。</div></footer>
+
+<script>
+'use strict';
+/* ============================================================
+   ヤクデスク OTCトリアージ支援 v1（薬剤師向け）
+   -----------------------------------------------------------
+   設計原則：
+   ・フェイルセーフ：迷ったら必ず受診側に倒す
+   ・判定は3段階：救急（ER）／受診勧奨（DR）／OTC対応可＋受診目安（OK）
+   ・提案は成分群レベルのみ。商品名・購入リンクは扱わない（W-003）
+   ・REVIEWED を true にできるのは、内容を確認した薬剤師（ねこ）のみ
+   ============================================================ */
+const REVIEWED = false;   // ← 薬剤師レビュー完了後に true へ（β帯が消える）
+
+/* 販売前の共通確認（全モジュールの販売可判定に必ず表示） */
+const COMMON = [
+  '妊娠中・妊娠の可能性・授乳中でないか',
+  '年齢（15歳未満・高齢者は成分・用量の適否を個別確認）',
+  '持病：高血圧・心臓病・腎臓病・肝臓病・糖尿病・緑内障・前立腺肥大等による排尿困難・喘息・消化性潰瘍の既往',
+  '服用中の薬（同効成分の重複、抗凝固薬・降圧薬等との相互作用）',
+  '薬によるアレルギー歴（アスピリン喘息を含む）',
+  '濫用等のおそれのある成分を含む製品は、販売個数・年齢確認等のルールを確認'
+];
+
+const MODULES = [
+{ id:'zutsu', name:'頭痛', desc:'緊張型・片頭痛様など',
+  er:[
+    '突然発症し、数分以内にピークに達する激しい頭痛（雷に打たれたような頭痛）',
+    'これまで経験したことのない最悪の頭痛',
+    '発熱があり、首を前に曲げにくい／意識がおかしい',
+    '手足の麻痺・しびれ、ろれつが回らない、物が二重に見える等の神経症状を伴う',
+    '頭部打撲のあとの頭痛で、悪化傾向がある'
+  ],
+  dr:[
+    '50歳以降で初めて出た頭痛',
+    '頻度・程度が徐々に悪化している',
+    'がんや免疫を抑える治療の既往がある',
+    '妊娠中に新しく出た頭痛',
+    '鎮痛薬を月に10日以上使用している（薬剤の使用過多による頭痛の懸念）',
+    '市販薬でほとんど改善しない頭痛が続いている'
+  ],
+  types:[
+    { t:'締め付けられるような痛み。肩こり・首こりを伴う（緊張型頭痛様）', k:'a' },
+    { t:'ズキンズキンと拍動性。動くと悪化、吐き気や光・音への過敏を伴う（片頭痛様）', k:'b' }
+  ],
+  rec:{
+    a:{ h:'解熱鎮痛成分での対応が候補',
+      g:[
+        ['アセトアミノフェン','胃への負担が比較的少なく、高齢者や胃の弱い人にも選びやすい。重い肝障害がある人は注意。'],
+        ['イブプロフェン等のNSAIDs','消化性潰瘍・アスピリン喘息・腎障害のある人、妊娠後期は避ける。']
+      ],
+      n:[
+        '15歳未満はアセトアミノフェン系の小児用製品を用量に注意して選ぶ',
+        'インフルエンザ様症状のある小児・若年者へのNSAIDsは避ける',
+        'カフェイン配合製剤の連用は避ける',
+        '改善しない・繰り返す場合は受診を案内'
+      ]},
+    b:{ h:'鎮痛成分での一時対応＋受診案内の併用が候補',
+      g:[
+        ['イブプロフェン等のNSAIDs／アセトアミノフェン','痛みの初期に服用するほうが効果を得やすい。禁忌・注意は緊張型と同様。']
+      ],
+      n:[
+        '片頭痛で生活への支障が大きい場合、処方薬（トリプタン等）や予防療法の選択肢があるため受診も併せて案内する',
+        '月に何度も繰り返す場合は頭痛外来・神経内科の受診を推奨'
+      ]}
+  }
+},
+{ id:'kaze', name:'発熱・かぜ様症状', desc:'発熱・悪寒・全身のだるさ',
+  er:[
+    '呼吸が苦しい・息切れが強い',
+    '意識がもうろうとしている・呼びかけへの反応が鈍い',
+    '水分がとれず、半日以上尿が出ていない（脱水の懸念）',
+    'けいれんを起こした',
+    '生後3か月未満の発熱',
+    '唇や顔色が悪い'
+  ],
+  dr:[
+    '38℃以上の発熱が3日以上続いている',
+    'いったん軽快したあとに再び悪化した（二次感染の懸念）',
+    '症状が1週間以上続いている',
+    '呼吸器・心臓・糖尿病などの基礎疾患がある、または免疫を抑える薬を使用中',
+    '高齢でぐったりしている・食事がとれていない'
+  ],
+  types:[
+    { t:'発熱・頭痛・関節痛が中心で、鼻・咳はほぼない', k:'a' },
+    { t:'熱・鼻・のど・咳など複数の症状が同程度にある', k:'b' }
+  ],
+  rec:{
+    a:{ h:'解熱鎮痛の単剤での対応が候補',
+      g:[
+        ['アセトアミノフェン','第一候補にしやすい。高熱でつらい場合の頓用として。'],
+        ['イブプロフェン等のNSAIDs','消化性潰瘍・喘息・腎障害・妊娠後期は避ける。']
+      ],
+      n:[
+        '症状が絞られている場合は、総合感冒薬より単剤のほうが不要な成分を避けられる',
+        '水分・休養の指導をセットで行う'
+      ]},
+    b:{ h:'総合感冒薬または症状別成分の組み合わせが候補',
+      g:[
+        ['総合感冒薬','症状が複数ある場合の選択肢。含有成分の重複に注意。'],
+        ['症状別の単剤（解熱鎮痛＋去痰など）','症状に合わせて必要な成分だけを選ぶ考え方。']
+      ],
+      n:[
+        '抗ヒスタミン成分は眠気に注意（運転・危険作業は避ける）',
+        '緑内障・前立腺肥大等で排尿困難のある人は抗コリン作用に注意',
+        'プソイドエフェドリン配合は高血圧・心疾患・甲状腺機能亢進症で注意',
+        'コデイン類・メチルエフェドリン等を含む製品は濫用等のおそれのある医薬品の販売ルールを確認'
+      ]}
+  }
+},
+{ id:'seki', name:'咳・のどの症状', desc:'咳・痰・のどの痛み',
+  er:[
+    '血の混じった痰が出る',
+    '呼吸困難、ゼーゼー・ヒューヒューという呼吸音（喘鳴）',
+    'のどの痛みが強く、唾も飲み込めない',
+    '異物を飲み込んだ・のどに詰まらせた可能性がある',
+    '犬が吠えるような咳と呼吸のしづらさ（小児）'
+  ],
+  dr:[
+    '咳が3週間以上続いている（結核・喘息・COPD等の鑑別が必要）',
+    '夜間・明け方の咳き込み発作を繰り返す',
+    '喫煙者で咳が続いている',
+    '降圧薬（ACE阻害薬）服用中の空咳',
+    '発熱を伴い、数日たっても改善しない'
+  ],
+  types:[
+    { t:'痰の絡まない乾いた咳が中心', k:'a' },
+    { t:'痰が絡む咳が中心', k:'b' },
+    { t:'のどの痛みが中心', k:'c' }
+  ],
+  rec:{
+    a:{ h:'鎮咳成分での対応が候補',
+      g:[ ['デキストロメトルファン等の鎮咳成分','乾性咳嗽の一時的な緩和に。'] ],
+      n:[
+        'コデイン類は12歳未満には使用しない',
+        'コデイン類・デキストロメトルファン等は濫用等のおそれのある医薬品の販売ルールを確認',
+        '喘息の既往がある人の咳は安易に止めず、受診寄りに判断'
+      ]},
+    b:{ h:'去痰成分中心の対応が候補',
+      g:[ ['カルボシステイン・ブロムヘキシン等の去痰成分','痰を出しやすくすることを優先。'] ],
+      n:[ '痰のある咳を強い鎮咳成分で無理に止めすぎない', '水分摂取・加湿の指導をセットで' ]},
+    c:{ h:'咽頭の抗炎症・対症成分が候補',
+      g:[
+        ['トラネキサム酸配合','のどの炎症・痛みに。'],
+        ['うがい薬・トローチ・のどスプレー','局所ケアとして。'],
+        ['解熱鎮痛成分','痛みが強い場合の頓用として。']
+      ],
+      n:[ '高熱＋強い咽頭痛＋扁桃の白い付着物などがあれば細菌性咽頭炎の懸念があり受診を案内' ]}
+  }
+},
+{ id:'hana', name:'鼻の症状', desc:'鼻水・鼻づまり・くしゃみ',
+  er:[
+    '鼻出血が止まらない',
+    '顔面の強い痛み・腫れや、視覚の異常を伴う'
+  ],
+  dr:[
+    '片側だけの膿性・悪臭のある鼻汁（副鼻腔炎・異物等の懸念）',
+    '10日以上続く、または膿性鼻汁と顔面痛を伴う（副鼻腔炎の懸念）',
+    '血管収縮薬の点鼻を1週間以上連用している（薬剤性鼻炎の懸念）',
+    '市販薬で改善しない'
+  ],
+  types:[
+    { t:'水様の鼻水・くしゃみ・目のかゆみ（アレルギー性鼻炎様）', k:'a' },
+    { t:'かぜに伴う鼻づまり・鼻水', k:'b' }
+  ],
+  rec:{
+    a:{ h:'第2世代抗ヒスタミン中心の対応が候補',
+      g:[
+        ['フェキソフェナジン・ロラタジン・エピナスチン等（第2世代）','眠気が比較的少なく常用しやすい。成分により運転可否の記載が異なる点に注意。'],
+        ['季節性アレルギー用の点鼻ステロイド','鼻づまりを含む鼻症状に。用法と対象（季節性）を確認。']
+      ],
+      n:[ '緑内障・前立腺肥大等の人は抗コリン作用のある成分に注意', '毎年続く場合は舌下免疫療法等の選択肢もあるため受診情報も提供' ]},
+    b:{ h:'感冒対応＋短期の局所対応が候補',
+      g:[
+        ['総合感冒薬または抗ヒスタミン成分','他のかぜ症状の程度に応じて。'],
+        ['血管収縮薬の点鼻','短期間のみ。連用で反跳性の鼻づまりを起こす。']
+      ],
+      n:[ '点鼻血管収縮薬は連用しないよう必ず説明する' ]}
+  }
+},
+{ id:'i', name:'胃の症状', desc:'胃痛・胸やけ・もたれ',
+  er:[
+    '吐血、コーヒーかす様の嘔吐、黒いタール状の便',
+    '突然の激しい腹痛が持続している',
+    '胸の圧迫感・締め付け感・冷汗を伴う（特に高齢・糖尿病・喫煙者では心疾患の可能性）',
+    '腹部が板のように硬い'
+  ],
+  dr:[
+    '食べ物がつかえる・飲み込みにくい',
+    '意図しない体重減少がある',
+    '中高年（目安55歳以降）で初めての症状が続いている',
+    'NSAIDs・低用量アスピリン服用中の胃痛',
+    '2週間以上続く・繰り返している',
+    'H2ブロッカー等を3日間使用しても改善しない'
+  ],
+  types:[
+    { t:'胸やけ・すっぱいものが上がる（呑酸）が中心', k:'a' },
+    { t:'胃の痛みが中心', k:'b' },
+    { t:'もたれ・食欲不振が中心', k:'c' }
+  ],
+  rec:{
+    a:{ h:'酸分泌抑制・制酸での対応が候補',
+      g:[
+        ['H2ブロッカー','3日間使用して改善しなければ受診。2週間を超えて連用しない。高齢者・腎機能低下では注意。'],
+        ['制酸薬','速効的な中和目的。透析患者はアルミニウム含有製剤を避ける。']
+      ],
+      n:[ '15歳未満のH2ブロッカーは不可（受診を案内）', '就寝前の食事回避など生活指導もセットで' ]},
+    b:{ h:'酸分泌抑制＋粘膜保護での対応が候補',
+      g:[
+        ['H2ブロッカー・ピレンゼピン','痛みを繰り返す場合は受診を前提に短期使用。'],
+        ['制酸・粘膜保護成分','補助的に。']
+      ],
+      n:[ '15歳未満は受診を案内', '黒色便の有無は必ず確認する' ]},
+    c:{ h:'健胃・消化補助での対応が候補',
+      g:[
+        ['健胃消化薬','食べすぎ・もたれの一時対応に。'],
+        ['六君子湯などの漢方','体質・症状に応じた選択肢。']
+      ],
+      n:[ '長引く場合は機能性ディスペプシア等の鑑別のため受診を案内' ]}
+  }
+},
+{ id:'geri', name:'下痢', desc:'急な下痢・軟便',
+  er:[
+    '血便・粘血便が出ている',
+    '38℃以上の発熱と強い腹痛を伴う',
+    'ぐったりしている・尿が出ない・立ちくらみ（脱水の懸念）',
+    '海外渡航後の下痢',
+    '同じ食事をとった複数人が同時に発症している（食中毒の疑い）'
+  ],
+  dr:[
+    '2〜3日以上続いている',
+    '下痢を繰り返す、便秘と交互に起こる（過敏性腸症候群・炎症性腸疾患等の鑑別）',
+    '抗菌薬の服用中または服用後に発症した',
+    '高齢者・乳幼児である'
+  ],
+  types:[
+    { t:'発熱・嘔吐を伴うなど、感染性が疑わしい', k:'a' },
+    { t:'冷え・食べすぎ・ストレスなど非感染性と考えられる', k:'b' }
+  ],
+  rec:{
+    a:{ h:'止瀉薬は原則避け、補水＋整腸で対応',
+      g:[
+        ['経口補水液・水分電解質の補給','最優先。摂れない場合は受診。'],
+        ['整腸剤（乳酸菌・酪酸菌等）','腸内環境の補助として。']
+      ],
+      n:[
+        '感染性が疑わしい下痢に、ロペラミド等の強い止瀉薬は原則使用しない（排菌を妨げる懸念）',
+        '悪化・持続する場合は受診を案内'
+      ]},
+    b:{ h:'短期の止瀉＋整腸での対応が候補',
+      g:[
+        ['ロペラミド','非感染性と考えられる急な下痢に短期間のみ。発熱・血便があれば使わない。'],
+        ['木クレオソート製剤・整腸剤','症状と好みに応じて。']
+      ],
+      n:[ '2日程度で改善しなければ受診を案内', '水分補給の指導をセットで' ]}
+  }
+},
+{ id:'benpi', name:'便秘', desc:'便が出ない・硬い',
+  er:[
+    '激しい腹痛・嘔吐を伴い、便もガスも出ていない（腸閉塞の懸念）',
+    '血便・黒色便が出ている'
+  ],
+  dr:[
+    '中高年（目安50歳以降）で急に便通の様子が変わった・体重減少を伴う（大腸疾患の鑑別）',
+    '刺激性下剤を連用しないと出なくなっている',
+    '市販薬で改善しない慢性の便秘',
+    '妊娠中である（自己判断での下剤使用は避け、受診・相談へ）'
+  ],
+  types:[
+    { t:'便が硬い・回数が少ない、一般的な便秘', k:'a' },
+    { t:'旅行や環境変化などによる一時的な便秘（頓用希望）', k:'b' }
+  ],
+  rec:{
+    a:{ h:'非刺激性中心の対応が候補',
+      g:[
+        ['酸化マグネシウム','習慣性が少なく選びやすい。高齢者・腎機能低下では高マグネシウム血症に注意。'],
+        ['整腸剤・食物繊維製剤','生活・食事指導（水分・繊維・運動）とセットで。']
+      ],
+      n:[ '効果が乏しい・長引く場合は受診を案内（処方薬の選択肢が複数ある）' ]},
+    b:{ h:'刺激性下剤の頓用が候補',
+      g:[
+        ['センノシド・ビサコジル等の刺激性下剤','頓用にとどめ、連用を避ける。']
+      ],
+      n:[ '妊娠中には刺激性下剤を安易に勧めない', '連用による効果減弱・依存傾向を必ず説明する' ]}
+  }
+},
+{ id:'seiri', name:'月経痛', desc:'生理に伴う下腹部痛',
+  er:[
+    '妊娠の可能性があり、突然の激しい下腹部痛がある（異所性妊娠等の懸念）',
+    '発熱を伴う強い下腹部痛（骨盤内感染の懸念）',
+    '失神する・立っていられないほどの痛み'
+  ],
+  dr:[
+    '年々痛みが悪化している・鎮痛薬が効きにくくなっている（子宮内膜症等の鑑別）',
+    '月経時以外の出血や痛みがある',
+    '経血量が非常に多い（過多月経の懸念）',
+    '痛みで毎回学校・仕事を休むほど支障が大きい（低用量ピル等の処方選択肢の情報提供も）'
+  ],
+  types:[
+    { t:'いつもの月経に伴う痛み', k:'a' }
+  ],
+  rec:{
+    a:{ h:'鎮痛成分での対応が候補',
+      g:[
+        ['イブプロフェン等のNSAIDs','痛み始めの早い段階での服用が効果的。消化性潰瘍・喘息等の注意は共通。'],
+        ['アセトアミノフェン','NSAIDsを避けたい場合の選択肢。'],
+        ['ブチルスコポラミン配合','けいれん性の痛みに。抗コリン作用のため緑内障・排尿困難のある人は注意。']
+      ],
+      n:[ '15歳未満はアセトアミノフェン系を基本に', '毎回つらい場合は婦人科受診の情報提供を' ]}
+  }
+}
+];
+
+/* ============================================================
+   エンジン部（通常は編集不要）
+   ============================================================ */
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const app = document.getElementById('app');
+let state = { mod:null, step:0, erHits:[], drHits:[] };
+
+if (REVIEWED) document.getElementById('beta-banner').style.display = 'none';
+
+function findMod(id){ return MODULES.find(m => m.id === id); }
+
+function viewHome(){
+  state = { mod:null, step:0, erHits:[], drHits:[] };
+  app.innerHTML =
+    '<h1>OTCトリアージ支援</h1>' +
+    '<p class="lead">相談された症状を選んでください。緊急サイン → 受診の目安 → 症状タイプの順に確認し、対応の候補を表示します。</p>' +
+    '<div class="modgrid">' +
+    MODULES.map(m => '<button class="modbtn" data-mod="' + m.id + '"><b>' + esc(m.name) + '</b><span>' + esc(m.desc) + '</span></button>').join('') +
+    '</div>';
+}
+
+function viewCheck(kind){  // kind: 'er' | 'dr'
+  const m = state.mod;
+  const list = kind === 'er' ? m.er : m.dr;
+  const title = kind === 'er' ? '緊急サインの確認' : '受診をすすめる目安の確認';
+  const sub = kind === 'er'
+    ? '1つでも該当すれば、販売より受診・救急の案内を優先します。'
+    : '1つでも該当すれば、受診をすすめることを基本にします。';
+  const stepNo = kind === 'er' ? 'STEP 1 / 3' : 'STEP 2 / 3';
+  app.innerHTML =
+    '<p class="stepmark">' + esc(m.name) + ' ── ' + stepNo + '</p>' +
+    '<h2 class="q">' + title + '</h2><p class="qsub">' + sub + '</p>' +
+    '<div class="cklist">' +
+    list.map((t,i) => '<label class="ck' + (kind==='dr'?' dr':'') + '"><input type="checkbox" data-i="' + i + '"><span>' + esc(t) + '</span></label>').join('') +
+    '</div>' +
+    '<div class="btnrow">' +
+    '<button class="btn primary" id="go-next">確認して次へ</button>' +
+    '<button class="btn ghost" id="go-home">症状選択に戻る</button>' +
+    '</div>';
+  document.getElementById('go-next').addEventListener('click', () => {
+    const hits = [...app.querySelectorAll('input:checked')].map(c => list[Number(c.dataset.i)]);
+    if (kind === 'er'){
+      if (hits.length){ state.erHits = hits; viewResult('er'); }
+      else { state.step = 2; viewCheck('dr'); }
+    } else {
+      if (hits.length){ state.drHits = hits; viewResult('dr'); }
+      else { state.step = 3; viewType(); }
+    }
+  });
+}
+
+function viewType(){
+  const m = state.mod;
+  if (m.types.length === 1){ viewResult('ok', m.types[0].k); return; }
+  app.innerHTML =
+    '<p class="stepmark">' + esc(m.name) + ' ── STEP 3 / 3</p>' +
+    '<h2 class="q">症状のタイプ</h2><p class="qsub">最も近いものを選んでください。</p>' +
+    '<div class="typegrid">' +
+    m.types.map(t => '<button class="typebtn" data-k="' + t.k + '">' + esc(t.t) + '</button>').join('') +
+    '</div>' +
+    '<div class="btnrow"><button class="btn ghost" id="go-home">症状選択に戻る</button></div>';
+}
+
+function viewResult(kind, typeKey){
+  const m = state.mod;
+  let html = '<p class="stepmark">' + esc(m.name) + ' ── 判定</p>';
+  if (kind === 'er'){
+    html += '<div class="verdict v-er"><p class="vt">受診・救急の案内を優先</p>' +
+      '<p>緊急性が疑われるサインに該当しています。<b>OTCの販売は行わず</b>、状態に応じて救急要請または救急外来・当日受診を案内してください。</p>' +
+      '<ul class="hitlist">' + state.erHits.map(h => '<li>' + esc(h) + '</li>').join('') + '</ul></div>';
+  } else if (kind === 'dr'){
+    html += '<div class="verdict v-dr"><p class="vt">受診勧奨</p>' +
+      '<p>受診をすすめる目安に該当しています。<b>本日〜数日中の受診を基本に案内</b>してください。つなぎの対症対応が必要な場合も、受診を前提に短期にとどめます。</p>' +
+      '<ul class="hitlist">' + state.drHits.map(h => '<li>' + esc(h) + '</li>').join('') + '</ul></div>';
+  } else {
+    const r = m.rec[typeKey];
+    html += '<div class="verdict v-ok"><p class="vt">OTC対応可（受診目安つき）</p>' +
+      '<p>緊急サイン・受診目安への該当はありません。以下の成分群が対応の候補です。<b>添付文書の「してはいけないこと」「相談すること」を必ず確認</b>のうえ選択してください。</p></div>' +
+      '<div class="reccard"><h3>' + esc(r.h) + '</h3>' +
+      r.g.map(g => '<div class="gline"><b>' + esc(g[0]) + '</b><span>' + esc(g[1]) + '</span></div>').join('') +
+      (r.n && r.n.length ? '<ul class="notes">' + r.n.map(n => '<li>' + esc(n) + '</li>').join('') + '</ul>' : '') +
+      '</div>' +
+      '<div class="confirm"><b>販売前の共通確認</b><ul>' + COMMON.map(c => '<li>' + esc(c) + '</li>').join('') + '</ul></div>';
+  }
+  html += '<div class="btnrow">' +
+    '<button class="btn primary" id="go-home">別の症状を確認する</button>' +
+    '<button class="btn ghost" id="go-retry">この症状をやり直す</button>' +
+    '</div>';
+  app.innerHTML = html;
+}
+
+app.addEventListener('click', e => {
+  const mb = e.target.closest('.modbtn');
+  if (mb){ state.mod = findMod(mb.dataset.mod); state.step = 1; state.erHits = []; state.drHits = []; viewCheck('er'); return; }
+  const tb = e.target.closest('.typebtn');
+  if (tb){ viewResult('ok', tb.dataset.k); return; }
+  if (e.target.id === 'go-home'){ viewHome(); window.scrollTo(0,0); return; }
+  if (e.target.id === 'go-retry'){ const m = state.mod; state.erHits=[]; state.drHits=[]; viewCheck('er'); window.scrollTo(0,0); return; }
+});
+
+viewHome();
+</script>
+</body>
+</html>
