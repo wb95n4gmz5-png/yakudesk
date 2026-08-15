@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="ヤクデスク｜薬剤師の実務ポータル。調剤報酬・疑義解釈、医薬品の供給状況、添付文書検索への最短導線と、現場目線の解説記事を提供します。">
+<meta name="theme-color" content="#fbfbf9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#101613" media="(prefers-color-scheme: dark)">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="apple-mobile-web-app-title" content="ヤクデスク">
+<meta name="format-detection" content="telephone=no">
+<meta property="og:title" content="ヤクデスク｜薬剤師の実務ポータル">
+<meta property="og:description" content="調剤報酬・疑義解釈、供給情報、OTCトリアージ支援、文例集。薬剤師の調べ物と店頭業務を最短距離で。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<title>ヤクデスク｜薬剤師の実務ポータル</title>
+<style>
+/* ============================================================
+   デザイントークン（配色・書体）
+   モチーフ：薬包紙の白 / 緑十字 / 処方箋の淡青 / 供給警告の琥珀
+   ============================================================ */
+:root{
+  --paper:#fbfbf9;        /* 薬包紙 */
+  --card:#ffffff;
+  --ink:#17211d;          /* 墨（緑がかった黒） */
+  --muted:#5c6862;
+  --green:#0b7a53;        /* 緑十字 */
+  --green-soft:#e7f2ec;
+  --blue-soft:#edf3f8;    /* 処方箋の淡青 */
+  --blue:#3d6a8f;
+  --amber:#a35c0a;        /* 供給警告 */
+  --amber-soft:#fbf1e2;
+  --red:#b0362f;
+  --red-soft:#faeceb;
+  --line:#e4e6e3;         /* PTPの銀 */
+  --line-strong:#c9cdc9;
+  --focus:#0b7a53;
+  --serif:"Hiragino Mincho ProN","Hiragino Mincho Pro","Yu Mincho","YuMincho","Noto Serif JP",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Yu Gothic","Noto Sans JP",sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#101613; --card:#171f1b; --ink:#eef2ef; --muted:#9aa69f;
+    --green:#43bf8f; --green-soft:#12271f;
+    --blue-soft:#16222b; --blue:#8db4d4;
+    --amber:#dfa04a; --amber-soft:#2a2013;
+    --red:#e08079; --red-soft:#2c1a19;
+    --line:#2a332e; --line-strong:#3b463f; --focus:#43bf8f;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--green); text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--focus); outline-offset:2px; border-radius:4px}
+.skip{position:absolute; left:-9999px; top:0; background:var(--green); color:#fff; padding:8px 14px; z-index:99}
+.skip:focus{left:8px}
+
+/* ---------- ヘッダー ---------- */
+header{
+  position:sticky; top:0; z-index:20;
+  background:color-mix(in srgb, var(--paper) 88%, transparent);
+  -webkit-backdrop-filter:saturate(1.4) blur(12px); backdrop-filter:saturate(1.4) blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.hwrap{max-width:1040px; margin:0 auto; padding:10px 20px; display:flex; align-items:center; gap:18px}
+.brand{display:flex; align-items:center; gap:9px; color:var(--ink)}
+.brand:hover{text-decoration:none}
+.brand svg{width:22px; height:22px; fill:var(--green); flex:none}
+.brand-name{font-family:var(--serif); font-size:1.28rem; font-weight:600; letter-spacing:.12em}
+.brand-sub{font-size:.62rem; color:var(--muted); border:1px solid var(--line-strong); border-radius:99px; padding:1px 7px; letter-spacing:.08em}
+.topnav{display:flex; gap:2px; margin-left:auto}
+.topnav a{color:var(--muted); font-size:.86rem; padding:7px 11px; border-radius:8px}
+.topnav a:hover{background:var(--green-soft); color:var(--green); text-decoration:none}
+.topnav a[aria-current="page"]{color:var(--green); font-weight:600; background:var(--green-soft)}
+.upd{font-family:var(--mono); font-size:.68rem; color:var(--muted); letter-spacing:.05em; white-space:nowrap}
+
+/* ---------- レイアウト ---------- */
+main{max-width:1040px; margin:0 auto; padding:26px 20px 60px}
+.page{display:none}
+.page.active{display:block; animation:fadein .18s ease}
+@keyframes fadein{from{opacity:0; transform:translateY(4px)} to{opacity:1; transform:none}}
+@media (prefers-reduced-motion: reduce){ .page.active{animation:none} }
+
+.eyebrow{font-family:var(--mono); font-size:.68rem; letter-spacing:.22em; color:var(--green); margin:0 0 6px}
+h1.hero{font-family:var(--serif); font-weight:600; font-size:clamp(1.7rem,4.6vw,2.5rem); letter-spacing:.05em; line-height:1.45; margin:0 0 10px}
+.lead{color:var(--muted); font-size:.95rem; margin:0 0 22px; max-width:640px}
+
+.sec{margin-top:38px}
+.sec-title{
+  font-family:var(--serif); font-weight:600; font-size:1.12rem; letter-spacing:.08em;
+  margin:0 0 14px; padding-bottom:9px;
+  border-bottom:3px double var(--line-strong);   /* 処方箋の二重罫線 */
+  display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;
+}
+.sec-title .en{font-family:var(--mono); font-weight:400; font-size:.62rem; letter-spacing:.18em; color:var(--muted)}
+.note{font-size:.8rem; color:var(--muted); margin:8px 0 0}
+.note a{color:var(--muted); text-decoration:underline}
+
+/* ---------- カード・グリッド ---------- */
+.grid{display:grid; gap:12px}
+.grid.g2{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.grid.g3{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.card{
+  background:var(--card); border:1px solid var(--line); border-radius:14px;
+  padding:16px 18px;
+}
+a.card{color:var(--ink); display:block}
+a.card:hover{text-decoration:none; border-color:var(--green)}
+.card h3{margin:0 0 4px; font-size:.98rem; letter-spacing:.02em}
+.card p{margin:0; font-size:.82rem; color:var(--muted); line-height:1.65}
+.card .go{display:inline-block; margin-top:8px; font-size:.78rem; color:var(--green)}
+
+/* ---------- ニュース ---------- */
+.newslist{list-style:none; margin:0; padding:0; border:1px solid var(--line); border-radius:14px; background:var(--card); overflow:hidden}
+.newslist li{padding:13px 18px; border-bottom:1px solid var(--line)}
+.newslist li:last-child{border-bottom:none}
+.n-head{display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin-bottom:2px}
+.n-date{font-family:var(--mono); font-size:.72rem; color:var(--muted); letter-spacing:.04em}
+.tag{font-size:.66rem; padding:1px 8px; border-radius:99px; letter-spacing:.06em; white-space:nowrap; border:1px solid transparent}
+.t-green{background:var(--green-soft); color:var(--green)}
+.t-blue{background:var(--blue-soft); color:var(--blue)}
+.t-amber{background:var(--amber-soft); color:var(--amber)}
+.t-red{background:var(--red-soft); color:var(--red)}
+.t-gray{background:var(--paper); color:var(--muted); border-color:var(--line)}
+.n-title{font-size:.9rem; line-height:1.6}
+.n-title a{color:var(--ink)}
+.n-title a:hover{color:var(--green)}
+.n-note{font-size:.76rem; color:var(--muted); margin-top:2px}
+
+/* ---------- 検索ランチャー ---------- */
+.launcher{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px}
+.qrow{display:flex; gap:8px}
+.qrow input{
+  flex:1; min-width:0; font-size:16px; font-family:var(--sans);
+  padding:12px 14px; border:1.5px solid var(--line-strong); border-radius:11px;
+  background:var(--paper); color:var(--ink);
+}
+.qrow input::placeholder{color:var(--muted)}
+.qrow input:focus{border-color:var(--green); outline:none}
+.chips{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:8px; margin-top:12px}
+.chip{
+  font-family:var(--sans); font-size:.84rem; text-align:left; cursor:pointer;
+  padding:11px 13px; border-radius:11px; border:1px solid var(--line);
+  background:var(--paper); color:var(--ink); min-height:44px;
+  display:flex; align-items:center; gap:8px;
+}
+.chip:hover{border-color:var(--green); color:var(--green)}
+.chip b{font-weight:600}
+.chip small{display:block; font-size:.66rem; color:var(--muted); font-weight:400}
+.portalrow{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+.portal{font-size:.78rem; padding:7px 12px; border-radius:99px; border:1px solid var(--line); color:var(--muted); background:var(--card)}
+.portal:hover{border-color:var(--green); color:var(--green); text-decoration:none}
+
+/* ---------- チェックリスト（代替薬） ---------- */
+.steps{counter-reset:step; list-style:none; margin:0; padding:0}
+.steps li{
+  position:relative; padding:12px 16px 12px 52px; background:var(--card);
+  border:1px solid var(--line); border-radius:12px; margin-bottom:8px; font-size:.88rem;
+}
+.steps li::before{
+  counter-increment:step; content:counter(step);
+  position:absolute; left:14px; top:12px;
+  width:26px; height:26px; border-radius:50%;
+  background:var(--green-soft); color:var(--green);
+  font-family:var(--mono); font-size:.8rem; font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+}
+.steps li b{display:block; margin-bottom:1px}
+.steps li span{color:var(--muted); font-size:.8rem}
+
+/* ---------- ストア ---------- */
+.pr-banner{
+  background:var(--amber-soft); border:1px solid color-mix(in srgb, var(--amber) 35%, transparent);
+  color:var(--amber); border-radius:12px; padding:10px 14px; font-size:.78rem; margin-bottom:18px;
+}
+.item .buy{display:flex; gap:8px; margin-top:10px}
+.buybtn{
+  flex:1; text-align:center; font-size:.78rem; padding:9px 8px; border-radius:9px;
+  border:1px solid var(--line-strong); color:var(--ink); background:var(--paper); min-height:40px;
+  display:flex; align-items:center; justify-content:center;
+}
+.buybtn:hover{text-decoration:none; border-color:var(--green); color:var(--green)}
+
+/* ---------- 本文ブロック（About等） ---------- */
+.prose{max-width:720px; font-size:.9rem}
+.prose h3{font-family:var(--serif); font-size:1rem; letter-spacing:.06em; margin:26px 0 6px; padding-left:10px; border-left:3px solid var(--green)}
+.prose p{margin:6px 0}
+.prose ul{margin:6px 0; padding-left:22px}
+.placeholder{background:var(--blue-soft); border-radius:6px; padding:1px 7px; font-size:.82rem}
+
+/* ---------- フッター ---------- */
+footer{border-top:1px solid var(--line); margin-top:20px}
+.fwrap{max-width:1040px; margin:0 auto; padding:24px 20px 30px; font-size:.76rem; color:var(--muted)}
+.fwrap a{color:var(--muted); text-decoration:underline}
+
+/* ---------- モバイル：下部タブバー（iOS風） ---------- */
+.tabbar{display:none}
+@media (max-width:768px){
+  .topnav{display:none}
+  .upd{display:none}
+  main{padding-bottom:96px}
+  footer{margin-bottom:70px}
+  .tabbar{
+    display:flex; position:fixed; left:0; right:0; bottom:0; z-index:30;
+    background:color-mix(in srgb, var(--paper) 92%, transparent);
+    -webkit-backdrop-filter:saturate(1.4) blur(14px); backdrop-filter:saturate(1.4) blur(14px);
+    border-top:1px solid var(--line);
+    padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+  }
+  .tabbar a{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:2px;
+    color:var(--muted); font-size:.6rem; letter-spacing:.04em; padding:4px 0; min-height:44px;
+  }
+  .tabbar a:hover{text-decoration:none}
+  .tabbar svg{width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round}
+  .tabbar a[aria-current="page"]{color:var(--green)}
+}
+@media print{ header,.tabbar,footer{display:none} }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">本文へ移動</a>
+
+<header>
+  <div class="hwrap">
+    <a class="brand" href="#home">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/></svg>
+      <span class="brand-name">ヤクデスク</span>
+      <span class="brand-sub">β</span>
+    </a>
+    <nav class="topnav" aria-label="主要ナビゲーション">
+      <a href="#home" data-nav="home">ホーム</a>
+      <a href="#hoshu" data-nav="hoshu">調剤報酬</a>
+      <a href="#kyokyu" data-nav="kyokyu">供給情報</a>
+      <a href="#search" data-nav="search">医薬品検索</a>
+      <a href="#store" data-nav="store">書籍・道具</a>
+      <a href="triage.html">OTCトリアージ</a>
+      <a href="bunrei.html">文例集</a>
+    </nav>
+    <span class="upd">更新 <time id="site-updated">----</time></span>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ================= ホーム ================= -->
+  <section class="page" id="page-home">
+    <p class="eyebrow">YAKUDESK ── 薬剤師の実務ポータル</p>
+    <h1 class="hero">調べ物を、最短距離で。</h1>
+    <p class="lead">添付文書・疑義解釈・供給状況。現場で「いま」必要な一次情報への最短導線と、現場目線の解説記事を提供します。</p>
+
+    <div class="launcher">
+      <div class="qrow">
+        <input id="q-home" type="search" placeholder="医薬品名・成分名を入力（例：アムロジピン）" autocomplete="off" enterkeyhint="search" aria-label="医薬品名を入力">
+      </div>
+      <div class="chips">
+        <button class="chip" data-kind="tenpu" data-src="q-home"><b>添付文書</b></button>
+        <button class="chip" data-kind="if" data-src="q-home"><b>インタビューフォーム</b></button>
+        <button class="chip" data-kind="shiryo" data-src="q-home"><b>メーカー資材</b></button>
+        <button class="chip" data-kind="kyokyu" data-src="q-home"><b>供給状況</b></button>
+      </div>
+      <p class="note">検索は新しいタブで開きます（PMDA等の公式サイト内をWeb検索）。詳しくは<a href="#search">医薬品検索</a>へ。</p>
+    </div>
+
+    <div class="sec">
+      <h2 class="sec-title">店頭ツール <span class="en">TOOLS</span></h2>
+      <div class="grid g2">
+      <a class="card" href="triage.html">
+        <h3>OTCトリアージ支援（β）</h3>
+        <p>症状別に「緊急サイン → 受診の目安 → 成分群の候補」を段階確認できる、薬剤師向けの判断補助ツール。頭痛・かぜ・胃腸症状など8症状に対応。</p>
+        <span class="go">ツールを開く →</span>
+      </a>
+      <a class="card" href="bunrei.html">
+        <h3>疑義照会・トレレポ文例集</h3>
+        <p>残薬調整・出荷調整時の代替提案・副作用疑いの情報提供など、コピーしてすぐ使える雛形12種。日数・残薬計算機つき。</p>
+        <span class="go">文例集を開く →</span>
+      </a>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2 class="sec-title">最新の更新 <span class="en">LATEST</span></h2>
+      <ul class="newslist" id="home-news"></ul>
+      <p class="note">掲載内容は作成時点の要約です。算定・調剤の判断は必ずリンク先の原本（告示・通知・疑義解釈資料）で確認してください。</p>
+    </div>
+
+    <div class="sec">
+      <h2 class="sec-title">解説記事 <span class="en">ARTICLES</span></h2>
+      <ul class="newslist" id="home-articles"></ul>
+      <p class="note">一次資料（告示・通知・疑義解釈）に基づくオリジナル解説です。新着は随時追加します。</p>
+    </div>
+
+    <div class="sec">
+      <h2 class="sec-title">メニュー <span class="en">SECTIONS</span></h2>
+      <div class="grid g2">
+        <a class="card" href="#hoshu"><h3>調剤報酬・改定情報</h3><p>令和8年度改定の告示・通知・疑義解釈への導線と更新まとめ。</p><span class="go">開く →</span></a>
+        <a class="card" href="#kyokyu"><h3>供給・出荷調整情報</h3><p>厚労省調査・供給データベース・代替薬検討の手順。</p><span class="go">開く →</span></a>
+        <a class="card" href="#search"><h3>医薬品検索</h3><p>添付文書・IF・資材・くすりのしおりへワンタップ。</p><span class="go">開く →</span></a>
+        <a class="card" href="#store"><h3>書籍・調剤道具</h3><p>現場の定番書籍と道具・事務用品のセレクション。</p><span class="go">開く →</span></a>
+        <a class="card" href="triage.html"><h3>OTCトリアージ支援（β）</h3><p>症状別の受診判断とOTC成分群の候補を段階確認。</p><span class="go">開く →</span></a>
+        <a class="card" href="bunrei.html"><h3>文例集・計算</h3><p>疑義照会・トレーシングレポートの雛形と日数計算。</p><span class="go">開く →</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 調剤報酬 ================= -->
+  <section class="page" id="page-hoshu">
+    <p class="eyebrow">REIMBURSEMENT ── 令和8年度改定対応</p>
+    <h1 class="hero">調剤報酬・改定情報</h1>
+    <p class="lead">令和8年度（2026年度）診療報酬改定の告示・通知・疑義解釈資料の発出状況を時系列で追跡します。原本は厚生労働省の掲載ページで必ず確認してください。</p>
+
+    <div class="sec">
+      <h2 class="sec-title">解説記事 <span class="en">ARTICLES</span></h2>
+      <ul class="newslist" id="hoshu-articles"></ul>
+    </div>
+
+    <div class="sec">
+      <h2 class="sec-title">更新トラッカー <span class="en">TRACKER</span></h2>
+      <ul class="newslist" id="hoshu-news"></ul>
+      <p class="note">疑義解釈資料は改定後も随時発出されます（事務連絡）。週1回の定期確認を推奨します。</p>
+    </div>
+
+    <div class="sec">
+      <h2 class="sec-title">公式・参照リンク <span class="en">SOURCES</span></h2>
+      <div class="grid g2" id="hoshu-links"></div>
+    </div>
+
+    <div class="sec">
+      <h2 class="sec-title">ミニ解説：疑義解釈とは <span class="en">BASICS</span></h2>
+      <div class="card prose">
+        <p>「疑義解釈資料」は、告示・通知の解釈について厚生労働省が Q&A 形式で示す事務連絡です。算定要件や届出の取扱いが、疑義解釈で初めて明確になることも多く、改定年は特に重要です。新人スタッフへの説明にもこの順序が有効です：<b>点数表（告示）→ 留意事項通知 → 疑義解釈</b>。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 供給情報 ================= -->
+  <section class="page" id="page-kyokyu">
+    <p class="eyebrow">SUPPLY ── 限定出荷・出荷停止への対応</p>
+    <h1 class="hero">供給・出荷調整情報</h1>
+    <p class="lead">供給状況の一次情報（厚労省の定期調査・各データベース）への導線と、代替薬検討の標準手順をまとめています。</p>
+
+    <div class="sec">
+      <h2 class="sec-title">供給トピック <span class="en">TOPICS</span></h2>
+      <ul class="newslist" id="kyokyu-news"></ul>
+    </div>
+
+    <div class="sec">
+      <h2 class="sec-title">供給情報データベース・公式ソース <span class="en">DATABASES</span></h2>
+      <div class="grid g2" id="kyokyu-links"></div>
+      <p class="note">メーカー個別の供給案内（お詫び文書・出荷再開案内など）は、<a href="#search">医薬品検索</a>の「供給状況」ボタンからも探せます。</p>
+    </div>
+
+    <div class="sec">
+      <h2 class="sec-title">代替薬検討の標準手順 <span class="en">WORKFLOW</span></h2>
+      <ol class="steps">
+        <li><b>供給状況を確認する</b><span>限定出荷か出荷停止か、解除見込みの有無をデータベースと厚労省調査（品目別出荷状況）で確認。</span></li>
+        <li><b>同一成分・同一規格の他社品を探す</b><span>一般名で横断検索し、在庫・卸の取扱いを確認。変更調剤の可否は処方箋の記載（変更不可欄等）に従う。</span></li>
+        <li><b>剤形・規格の変更可否を検討する</b><span>変更調剤ルールの範囲内かを確認。範囲外なら疑義照会へ。</span></li>
+        <li><b>同種同効薬への変更を疑義照会する</b><span>成分変更は必ず処方医への照会が必要。代替候補と理由（供給状況）を添えて提案すると円滑。</span></li>
+        <li><b>患者説明と記録を残す</b><span>見た目・名称の変更を説明し、薬歴に経緯（供給起因・照会内容・同意）を記録。次回来局時の確認事項も控える。</span></li>
+      </ol>
+      <p class="note">本手順は一般的な業務フローの整理であり、個別の医薬品の使用を推奨するものではありません。最終判断は添付文書等の一次情報と処方医への確認に基づいてください。</p>
+    </div>
+  </section>
+
+  <!-- ================= 医薬品検索 ================= -->
+  <section class="page" id="page-search">
+    <p class="eyebrow">DRUG LOOKUP ── 一次情報への最短導線</p>
+    <h1 class="hero">医薬品検索</h1>
+    <p class="lead">薬剤名を一度入力すれば、添付文書からメーカー資材まで、目的別にワンタップで到達できます。ログイン不要・無料の公式ソースのみを使用します。</p>
+
+    <div class="launcher">
+      <div class="qrow">
+        <input id="q" type="search" placeholder="医薬品名・成分名を入力（例：エンレスト、サクビトリル）" autocomplete="off" enterkeyhint="search" aria-label="医薬品名を入力">
+      </div>
+      <div class="chips">
+        <button class="chip" data-kind="tenpu" data-src="q"><span><b>添付文書</b><small>PMDA内をWeb検索</small></span></button>
+        <button class="chip" data-kind="if" data-src="q"><span><b>インタビューフォーム</b><small>PMDA内をWeb検索</small></span></button>
+        <button class="chip" data-kind="shiryo" data-src="q"><span><b>メーカー資材</b><small>医療関係者向け資材を検索</small></span></button>
+        <button class="chip" data-kind="shiori" data-src="q"><span><b>くすりのしおり</b><small>患者説明用（RAD-AR）</small></span></button>
+        <button class="chip" data-kind="kyokyu" data-src="q"><span><b>供給状況</b><small>限定出荷・出荷調整を検索</small></span></button>
+        <button class="chip" data-kind="pubmed" data-src="q"><span><b>PubMed</b><small>文献検索（英語）</small></span></button>
+      </div>
+      <div class="portalrow" id="search-portals"></div>
+      <p class="note">「添付文書」「IF」はGoogleでPMDAサイト内を検索する方式です（検索結果から該当PDFを開いてください）。将来のバージョンで直接検索への強化を予定しています。</p>
+    </div>
+  </section>
+
+  <!-- ================= 書籍・道具 ================= -->
+  <section class="page" id="page-store">
+    <p class="eyebrow">BOOKS &amp; TOOLS ── 現場の定番</p>
+    <h1 class="hero">書籍・調剤道具</h1>
+    <p class="lead">薬局現場で実際に使われている定番の書籍・道具・事務用品を厳選しています。</p>
+    <p class="pr-banner">【PR】本ページはアフィリエイトプログラム（Amazonアソシエイト等）による広告を含みます。リンク先の価格・在庫は各ストアで最新の情報をご確認ください。</p>
+
+    <div class="sec">
+      <h2 class="sec-title">定番書籍 <span class="en">BOOKS</span></h2>
+      <div class="grid g3" id="store-books"></div>
+    </div>
+
+    <div class="sec">
+      <h2 class="sec-title">調剤道具・事務用品 <span class="en">TOOLS</span></h2>
+      <div class="grid g3" id="store-tools"></div>
+      <p class="note">医薬品そのものの販売リンクは、法令上の観点から本サイトでは一切取り扱いません。</p>
+    </div>
+  </section>
+
+  <!-- ================= このサイトについて ================= -->
+  <section class="page" id="page-about">
+    <p class="eyebrow">ABOUT</p>
+    <h1 class="hero">このサイトについて</h1>
+    <div class="prose">
+      <h3>目的</h3>
+      <p>本サイトは、薬剤師・薬局スタッフが業務で必要とする一次情報（行政の告示・通知・疑義解釈、医薬品の供給状況、添付文書等）へ最短で到達するための「案内板」です。情報の転載ではなく、公式ソースへのリンクと発出状況の整理を提供します。</p>
+      <h3>運営者情報</h3>
+      <p>運営：<span class="placeholder">（公開前に運営者名を記入）</span><br>連絡先：<span class="placeholder">（公開前に問い合わせ先メールアドレス等を記入）</span></p>
+      <h3>情報の取り扱いと免責</h3>
+      <ul>
+        <li>掲載内容は作成時点の情報の要約です。<b>算定・調剤・服薬指導の最終判断は、必ずリンク先の原本（告示・通知・添付文書等）に基づいて行ってください。</b></li>
+        <li>本サイトは特定の医薬品の使用・購入を推奨するものではなく、医療用医薬品の広告を行いません。</li>
+        <li>リンク先の内容・正確性について、当サイトは責任を負いません。リンク切れ等はお問い合わせよりご連絡ください。</li>
+      </ul>
+      <h3>プライバシー</h3>
+      <ul>
+        <li>本サイトは会員登録・ログイン機能を持たず、氏名・メールアドレス等の個人情報を収集しません。</li>
+        <li>現時点でCookie・アクセス解析ツールは使用していません（導入する場合は本欄を更新のうえ告知します）。</li>
+      </ul>
+      <h3>広告について</h3>
+      <p>「書籍・道具」ページには、アフィリエイトプログラムによる広告リンクを含みます（該当ページに【PR】を明示）。広告の有無が情報の中立性に影響しないよう、医薬品自体の広告は取り扱いません。</p>
+      <h3>著作権</h3>
+      <p>リンク先の各コンテンツの著作権は、それぞれの権利者に帰属します。本サイトのオリジナル部分の無断転載はご遠慮ください。</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="fwrap">
+    <p><b>ヤクデスク</b> ── 薬剤師の実務ポータル ｜ <a href="#about">このサイトについて・運営者情報</a></p>
+    <p>本サイトは情報提供を目的としており、医療行為・算定の最終判断は一次情報に基づいて行ってください。</p>
+    <p>© 2026 ヤクデスク</p>
+  </div>
+</footer>
+
+<!-- モバイル下部タブバー -->
+<nav class="tabbar" aria-label="タブバー">
+  <a href="#home" data-nav="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5M5.5 10.5V20h13v-9.5"/></svg>ホーム</a>
+  <a href="#hoshu" data-nav="hoshu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 12h7M9 16h7"/></svg>報酬</a>
+  <a href="#kyokyu" data-nav="kyokyu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 8 12 4l8.5 4v8L12 20l-8.5-4zM3.5 8 12 12l8.5-4M12 12v8"/></svg>供給</a>
+  <a href="#search" data-nav="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="m15.5 15.5 5 5"/></svg>検索</a>
+  <a href="#store" data-nav="store"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16l-1.2 12H5.2zM8 8V6a4 4 0 0 1 8 0v2"/></svg>ストア</a>
+</nav>
+
+<script>
+'use strict';
+/* ============================================================
+   ヤクデスク v2 ── データ定義（ここを編集して更新します）
+   -----------------------------------------------------------
+   更新のしかた：
+   1. SITE.updated の日付を今日に変える
+   2. NEWS_HOSHU / NEWS_KYOKYU の配列の「先頭」に新しい項目を追加する
+      書式：{ date:'YYYY-MM-DD', tag:'疑義解釈', title:'…', url:'https://…', note:'…' }
+      tag の種類：疑義解釈 / 告示・通知 / 事務連絡 / 定期調査 / DB / 供給 / 出荷停止 / メモ
+   3. ファイルを保存して、ホスティングに再アップロード（上書き）する
+   ※ シングルクォート（'）を文中に使う場合は \' と書く
+   ============================================================ */
+
+const SITE = {
+  name: 'ヤクデスク',          // ← サイト名（確定）
+  updated: '2026-07-20'        // ← 更新のたびに今日の日付へ
+};
+
+/* ---- アフィリエイト設定（取得後に記入。空のままでも通常リンクとして動作） ---- */
+const AFF = {
+  amazonTag: ''                // 例：'mameneko-22'（AmazonアソシエイトのトラッキングID）
+};
+
+/* ---- 解説記事の目次（記事本体は同じフォルダ内の別HTMLファイル）
+     記事を追加したら、この配列の「先頭」に1行足す。
+     path はファイル名（半角英数とハイフンのみ。日本語・スペース不可） ---- */
+const ARTICLES = [
+  { date:'2026-07-17', tag:'解説', title:'令和8年度改定｜疑義解釈の追い方 完全ガイド（発出状況つき）', path:'r8-gigikaishaku.html', lead:'告示→通知→疑義解釈の読む順番と、（その7）までの発出状況を1ページで整理。' }
+];
+
+/* ---- 調剤報酬：更新トラッカー（新しいものを配列の先頭へ） ---- */
+const MHLW_KAITEI = 'https://www.mhlw.go.jp/stf/newpage_67729.html'; // 令和8年度診療報酬改定（厚労省）
+const NEWS_HOSHU = [
+  { date:'2026-06-01', tag:'メモ', title:'疑義解釈資料は（その7）まで発出済み（2026年6月1日時点）。以降も随時追加のため定期確認を', url:MHLW_KAITEI, note:'調剤関連の抜粋は各社の改定資料も参考になるが、原本は厚労省ページで確認。' },
+  { date:'2026-04-20', tag:'疑義解釈', title:'疑義解釈資料（その3）発出 ── 地域支援・医薬品供給対応体制加算の取扱い 等', url:MHLW_KAITEI, note:'' },
+  { date:'2026-03-23', tag:'疑義解釈', title:'疑義解釈資料（その1）発出 ── 調剤ベースアップ評価料の対象職員の取扱い 等', url:MHLW_KAITEI, note:'' },
+  { date:'2026-03-05', tag:'告示・通知', title:'令和8年度診療報酬改定 告示・通知が公表（調剤点数表：告示第69号／留意事項通知：保医発0305第6号）', url:MHLW_KAITEI, note:'点数表・様式・施設基準はすべて厚労省の改定ページに集約。' }
+];
+
+/* ---- 供給情報：トピック（新しいものを配列の先頭へ） ---- */
+const NEWS_KYOKYU = [
+  { date:'定期', tag:'定期調査', title:'厚労省「医薬品供給状況にかかる調査」結果（品目別出荷状況・Excel）── 日薬連ページから最新版を確認', url:'https://www.fpmaj.gr.jp/medical-info/results-of-survey/', note:'限定出荷・出荷停止の全体像はまずここ。' },
+  { date:'常設', tag:'DB', title:'DSJP（医療用医薬品供給状況データベース）── 供給状況・代替品検索、厚労省データの更新履歴', url:'https://drugshortage.jp/', note:'一般社団法人asTas運営。一部機能は会員向け。' },
+  { date:'常設', tag:'DB', title:'CloseDi 供給状況検索 ── 厚労省データを反映（かな検索対応）', url:'https://closedi.jp/medical_supply/', note:'' }
+];
+
+/* ---- 調剤報酬：公式・参照リンク ---- */
+const LINKS_HOSHU = [
+  { name:'厚生労働省｜令和8年度診療報酬改定', desc:'告示・通知・疑義解釈資料の原本掲載ページ。すべての起点。', url:MHLW_KAITEI },
+  { name:'地方厚生局（管轄局）', desc:'施設基準の届出様式・改定時集団指導の案内。自局の管轄ページを確認。', url:'https://kouseikyoku.mhlw.go.jp/' },
+  { name:'しろぼんねっと', desc:'点数表・通知の条文を検索しやすく整理した定番の参照サイト。', url:'https://shirobon.net/' },
+  { name:'WAM NET（福祉医療機構）', desc:'行政資料・通知の横断検索に。', url:'https://www.wam.go.jp/' },
+  { name:'日本薬剤師会', desc:'会員向け資料・改定説明資料など。', url:'https://www.nichiyaku.or.jp/' }
+];
+
+/* ---- 供給情報：データベース・公式ソース ---- */
+const LINKS_KYOKYU = [
+  { name:'DSJP（drugshortage.jp）', desc:'供給状況・代替品・包装検索。厚労省データの更新履歴も掲載。', url:'https://drugshortage.jp/' },
+  { name:'日薬連｜医薬品供給状況にかかる調査結果', desc:'厚労省と連携した定期調査。品目別出荷状況（Excel）の入手元。', url:'https://www.fpmaj.gr.jp/medical-info/results-of-survey/' },
+  { name:'CloseDi｜供給状況検索', desc:'厚労省データ反映の検索ツール。経過措置期限・薬価検索も。', url:'https://closedi.jp/medical_supply/' },
+  { name:'PMDA（医薬品医療機器総合機構）', desc:'添付文書・安全性情報の総本山。回収情報もこちら。', url:'https://www.pmda.go.jp/' },
+  { name:'日本ジェネリック製薬協会', desc:'後発品の供給・品質に関する情報。', url:'https://www.jga.gr.jp/' }
+];
+
+/* ---- 医薬品検索：直行ポータル ---- */
+const PORTALS = [
+  { name:'PMDA 添付文書検索（トップ）', url:'https://www.pmda.go.jp/PmdaSearch/iyakuSearch/' },
+  { name:'DSJP（供給状況）', url:'https://drugshortage.jp/' },
+  { name:'CloseDi（供給・薬価）', url:'https://closedi.jp/medical_supply/' },
+  { name:'くすりのしおり（RAD-AR）', url:'https://www.rad-ar.or.jp/' },
+  { name:'KEGG', url:'https://www.kegg.jp/' }
+];
+
+/* ---- ストア：書籍（q はストア検索用キーワード） ---- */
+const BOOKS = [
+  { name:'今日の治療薬 2026（南江堂）', desc:'治療薬年鑑の定番。調剤室に1冊。', q:'今日の治療薬 2026' },
+  { name:'治療薬ハンドブック 2026（じほう）', desc:'比較表が見やすい年鑑のもう一方の定番。', q:'治療薬ハンドブック 2026' },
+  { name:'保険調剤Q&A 令和8年版（じほう）', desc:'改定年の算定疑義はまずこれで確認。', q:'保険調剤Q&A 令和8年版' },
+  { name:'調剤報酬点数表の解釈（社会保険研究所）', desc:'通称「青本」。原文ベースで確認したい人に。', q:'調剤報酬点数表の解釈' },
+  { name:'薬局で使える 薬の比較と使い分け100（羊土社）', desc:'同種同効薬の使い分けを学ぶ定番書。代替薬提案の引き出しに。', q:'薬の比較と使い分け100' }
+];
+
+/* ---- ストア：道具・事務用品 ---- */
+const TOOLS = [
+  { name:'軟膏板・軟膏ヘラ', desc:'混合調剤の基本セット。ステンレス製が洗いやすい。', q:'軟膏板 軟膏ヘラ ステンレス' },
+  { name:'散薬スパーテル（薬匙）', desc:'秤取のしやすさは先端形状で決まる。', q:'スパーテル 薬さじ ステンレス' },
+  { name:'錠剤カウンティングトレー', desc:'計数監査の時短に。半錠カット後の整理にも。', q:'錠剤 カウンティングトレー' },
+  { name:'12桁電卓', desc:'薬価計算・在庫金額に。早打ち対応モデルが快適。', q:'電卓 12桁 実務' },
+  { name:'デジタルタイマー', desc:'水剤の振とう時間や待ち時間管理に。マグネット式が便利。', q:'デジタルタイマー マグネット' },
+  { name:'ネーム印（キャップレス）', desc:'処方箋・薬歴の押印を片手で。', q:'シャチハタ キャップレス ネーム印' },
+  { name:'ラベルライター', desc:'調剤棚・引き出しの表示整備に。棚卸しが楽になる。', q:'ラベルライター テプラ' },
+  { name:'指サック（めくり用）', desc:'処方箋・レセプトの束さばきに。', q:'メクリッコ 指サック' },
+  { name:'クリップボード（二つ折り）', desc:'在宅訪問・棚卸しのメモ台に。個人情報が隠せる二つ折りが安心。', q:'クリップボード 二つ折り A4' }
+];
+
+/* ============================================================
+   ここから下はプログラム本体（通常は編集不要）
+   ============================================================ */
+
+/* HTMLエスケープ（データを安全に表示するため） */
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* タグ→色クラス */
+const TAGCOLOR = { '疑義解釈':'t-green', '告示・通知':'t-blue', '事務連絡':'t-gray', '定期調査':'t-amber', 'DB':'t-blue', '供給':'t-amber', '出荷停止':'t-red', '改善':'t-green', 'メモ':'t-gray' };
+
+/* ニュース1件のHTML */
+function newsItem(n){
+  const tagCls = TAGCOLOR[n.tag] || 't-gray';
+  const title = n.url
+    ? '<a href="' + esc(n.url) + '" target="_blank" rel="noopener noreferrer">' + esc(n.title) + ' ↗</a>'
+    : esc(n.title);
+  const note = n.note ? '<div class="n-note">' + esc(n.note) + '</div>' : '';
+  return '<li><div class="n-head"><span class="n-date">' + esc(n.date) + '</span>' +
+         '<span class="tag ' + tagCls + '">' + esc(n.tag) + '</span></div>' +
+         '<div class="n-title">' + title + '</div>' + note + '</li>';
+}
+
+/* リンクカード1件のHTML */
+function linkCard(l){
+  return '<a class="card" href="' + esc(l.url) + '" target="_blank" rel="noopener noreferrer">' +
+         '<h3>' + esc(l.name) + '</h3><p>' + esc(l.desc) + '</p>' +
+         '<span class="go">開く ↗</span></a>';
+}
+
+/* ストア商品1件のHTML（Amazon／楽天の検索ページへ。AFF設定後は自動でタグ付与） */
+function storeItem(it){
+  const q = encodeURIComponent(it.q);
+  let amazon = 'https://www.amazon.co.jp/s?k=' + q;
+  if (AFF.amazonTag) amazon += '&tag=' + encodeURIComponent(AFF.amazonTag);
+  const rakuten = 'https://search.rakuten.co.jp/search/mall/' + q + '/';
+  return '<div class="card item"><h3>' + esc(it.name) + '</h3><p>' + esc(it.desc) + '</p>' +
+         '<div class="buy">' +
+         '<a class="buybtn" href="' + amazon + '" target="_blank" rel="noopener noreferrer nofollow sponsored">Amazonで探す</a>' +
+         '<a class="buybtn" href="' + rakuten + '" target="_blank" rel="noopener noreferrer nofollow sponsored">楽天で探す</a>' +
+         '</div></div>';
+}
+
+/* 検索ランチャー：目的別のURL生成 */
+const gsearch = s => 'https://www.google.com/search?q=' + encodeURIComponent(s);
+const LAUNCH = {
+  tenpu:  q => gsearch(q + ' 添付文書 site:pmda.go.jp'),
+  if:     q => gsearch(q + ' インタビューフォーム site:pmda.go.jp'),
+  shiryo: q => gsearch(q + ' 医療関係者向け 資材'),
+  shiori: q => gsearch(q + ' site:rad-ar.or.jp'),
+  kyokyu: q => gsearch(q + ' 限定出荷 OR 出荷調整 OR 供給'),
+  pubmed: q => 'https://pubmed.ncbi.nlm.nih.gov/?term=' + encodeURIComponent(q)
+};
+
+function runLaunch(kind, srcId){
+  const input = document.getElementById(srcId);
+  const q = (input.value || '').trim();
+  if(!q){ input.focus(); return; }
+  const fn = LAUNCH[kind];
+  if(fn) window.open(fn(q), '_blank', 'noopener');
+}
+
+/* ---- 描画 ---- */
+function render(){
+  document.getElementById('site-updated').textContent = SITE.updated;
+  document.getElementById('hoshu-news').innerHTML = NEWS_HOSHU.map(newsItem).join('');
+  document.getElementById('kyokyu-news').innerHTML = NEWS_KYOKYU.map(newsItem).join('');
+  const latest = [...NEWS_HOSHU.slice(0,2), ...NEWS_KYOKYU.slice(0,1)];
+  document.getElementById('home-news').innerHTML = latest.map(newsItem).join('');
+  const artHtml = ARTICLES.map(a =>
+    '<li><div class="n-head"><span class="n-date">' + esc(a.date) + '</span>' +
+    '<span class="tag t-green">' + esc(a.tag) + '</span></div>' +
+    '<div class="n-title"><a href="' + esc(a.path) + '">' + esc(a.title) + ' →</a></div>' +
+    '<div class="n-note">' + esc(a.lead) + '</div></li>').join('');
+  document.getElementById('home-articles').innerHTML = artHtml;
+  document.getElementById('hoshu-articles').innerHTML = artHtml;
+  document.getElementById('hoshu-links').innerHTML = LINKS_HOSHU.map(linkCard).join('');
+  document.getElementById('kyokyu-links').innerHTML = LINKS_KYOKYU.map(linkCard).join('');
+  document.getElementById('search-portals').innerHTML = PORTALS.map(p =>
+    '<a class="portal" href="' + esc(p.url) + '" target="_blank" rel="noopener noreferrer">' + esc(p.name) + ' ↗</a>').join('');
+  document.getElementById('store-books').innerHTML = BOOKS.map(storeItem).join('');
+  document.getElementById('store-tools').innerHTML = TOOLS.map(storeItem).join('');
+}
+
+/* ---- ルーティング（#home / #hoshu / #kyokyu / #search / #store / #about） ---- */
+const ROUTES = { home:'ホーム', hoshu:'調剤報酬', kyokyu:'供給情報', search:'医薬品検索', store:'書籍・道具', about:'このサイトについて' };
+
+function route(){
+  let key = (location.hash || '#home').slice(1);
+  if(!ROUTES[key]) key = 'home';
+  document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === 'page-' + key));
+  document.querySelectorAll('[data-nav]').forEach(a => {
+    if(a.dataset.nav === key) a.setAttribute('aria-current','page');
+    else a.removeAttribute('aria-current');
+  });
+  document.title = (key === 'home' ? '' : ROUTES[key] + '｜') + SITE.name + '｜薬剤師の実務ポータル';
+  window.scrollTo(0, 0);
+}
+
+/* ---- イベント ---- */
+document.addEventListener('click', e => {
+  const chip = e.target.closest('.chip');
+  if(chip) runLaunch(chip.dataset.kind, chip.dataset.src);
+});
+['q','q-home'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('keydown', e => {
+    if(e.key === 'Enter') runLaunch('tenpu', id);   // Enterキーで添付文書検索
+  });
+});
+window.addEventListener('hashchange', route);
+
+render();
+route();
+</script>
+</body>
+</html>
