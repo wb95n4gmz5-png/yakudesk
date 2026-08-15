@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="疑義照会・トレーシングレポート（服薬情報提供書）の文例集。残薬調整、出荷調整時の代替薬提案、副作用疑いの情報提供など、薬局実務でそのまま使える雛形をコピーボタン付きで掲載。日数・残薬計算機つき。">
+<meta name="theme-color" content="#fbfbf9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#101613" media="(prefers-color-scheme: dark)">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>疑義照会・トレーシングレポート文例集｜ヤクデスク</title>
+<style>
+:root{
+  --paper:#fbfbf9; --card:#ffffff; --ink:#17211d; --muted:#5c6862;
+  --green:#0b7a53; --green-soft:#e7f2ec; --blue-soft:#edf3f8; --blue:#3d6a8f;
+  --amber:#a35c0a; --amber-soft:#fbf1e2; --line:#e4e6e3; --line-strong:#c9cdc9;
+  --serif:"Hiragino Mincho ProN","Hiragino Mincho Pro","Yu Mincho","YuMincho","Noto Serif JP",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Yu Gothic","Noto Sans JP",sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --paper:#101613; --card:#171f1b; --ink:#eef2ef; --muted:#9aa69f;
+    --green:#43bf8f; --green-soft:#12271f; --blue-soft:#16222b; --blue:#8db4d4;
+    --amber:#dfa04a; --amber-soft:#2a2013; --line:#2a332e; --line-strong:#3b463f; }
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans);
+  font-size:16px; line-height:1.8; -webkit-font-smoothing:antialiased}
+a{color:var(--green)}
+:focus-visible{outline:2px solid var(--green); outline-offset:2px}
+header{position:sticky; top:0; background:color-mix(in srgb, var(--paper) 88%, transparent);
+  -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); z-index:10}
+.hwrap{max-width:760px; margin:0 auto; padding:10px 20px; display:flex; align-items:center; gap:9px}
+.hwrap svg{width:20px; height:20px; fill:var(--green)}
+.hwrap a{font-family:var(--serif); font-size:1.1rem; font-weight:600; letter-spacing:.12em;
+  color:var(--ink); text-decoration:none; display:flex; align-items:center; gap:9px}
+.hsub{font-size:.7rem; color:var(--muted); margin-left:auto; letter-spacing:.06em}
+main{max-width:760px; margin:0 auto; padding:24px 20px 70px}
+h1{font-family:var(--serif); font-weight:600; font-size:clamp(1.35rem,4.2vw,1.7rem); letter-spacing:.05em; margin:4px 0 8px}
+.lead{color:var(--muted); font-size:.88rem; margin:0 0 18px}
+.disc{background:var(--blue-soft); border-radius:12px; padding:10px 14px; font-size:.76rem; margin-bottom:24px}
+h2.sec{font-family:var(--serif); font-weight:600; font-size:1.1rem; letter-spacing:.07em;
+  margin:36px 0 14px; padding-bottom:8px; border-bottom:3px double var(--line-strong);
+  display:flex; align-items:baseline; gap:10px}
+h2.sec .en{font-family:var(--mono); font-weight:400; font-size:.62rem; letter-spacing:.18em; color:var(--muted)}
+
+/* 計算機 */
+.calc{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:12px}
+.calc h3{margin:0 0 10px; font-size:.94rem}
+.crow{display:flex; flex-wrap:wrap; gap:9px; align-items:flex-end}
+.cfield{display:flex; flex-direction:column; gap:3px}
+.cfield label{font-size:.72rem; color:var(--muted)}
+.cfield input{font-family:var(--sans); font-size:16px; padding:9px 11px; border:1.5px solid var(--line-strong);
+  border-radius:9px; background:var(--paper); color:var(--ink); width:150px}
+.cfield input[type=number]{width:110px}
+.cfield input:focus{border-color:var(--green); outline:none}
+.cbtn{font-family:var(--sans); cursor:pointer; border-radius:9px; padding:10px 16px; font-size:.86rem;
+  border:1px solid var(--green); background:var(--green); color:#fff; min-height:42px}
+.cout{margin-top:10px; font-size:.92rem; background:var(--green-soft); border-radius:9px; padding:9px 13px; display:none}
+.cout.show{display:block}
+.cnote{font-size:.72rem; color:var(--muted); margin-top:8px}
+
+/* 文例カード */
+.tpl{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:15px 17px; margin-bottom:12px}
+.tpl-head{display:flex; align-items:center; gap:10px; margin-bottom:8px}
+.tpl-head h3{margin:0; font-size:.93rem; flex:1}
+.copybtn{font-family:var(--sans); cursor:pointer; flex:none; border-radius:99px; padding:7px 15px; font-size:.78rem;
+  border:1px solid var(--green); background:var(--green-soft); color:var(--green); min-height:36px}
+.copybtn:hover{background:var(--green); color:#fff}
+.copybtn.done{background:var(--green); color:#fff}
+.tpl pre{margin:0; white-space:pre-wrap; font-family:var(--sans); font-size:.85rem; line-height:1.85;
+  background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:12px 14px}
+.tpl .use{font-size:.72rem; color:var(--muted); margin:7px 0 0}
+footer{border-top:1px solid var(--line)}
+.fwrap{max-width:760px; margin:0 auto; padding:20px; font-size:.74rem; color:var(--muted)}
+.fwrap a{color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <a href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/></svg>ヤクデスク</a>
+    <span class="hsub">文例集・計算</span>
+  </div>
+</header>
+<main>
+  <h1>疑義照会・トレーシングレポート文例集</h1>
+  <p class="lead">店頭からそのまま使える雛形です。「コピー」を押して、【　】の部分を書き換えてご利用ください。日数・残薬のクイック計算機つき。</p>
+  <div class="disc">文例はあくまで雛形です。実際の照会・報告は、各施設の様式・地域のルール・処方医との関係性に合わせて調整してください。緊急性のある内容（重大な副作用疑い等）は文書ではなく、まず電話で照会してください。</div>
+
+  <h2 class="sec">日数・残薬クイック計算 <span class="en">CALC</span></h2>
+
+  <div class="calc">
+    <h3>服用終了日の計算</h3>
+    <div class="crow">
+      <div class="cfield"><label for="c1-start">服用開始日</label><input type="date" id="c1-start"></div>
+      <div class="cfield"><label for="c1-days">処方日数（日分）</label><input type="number" id="c1-days" min="1" inputmode="numeric"></div>
+      <button class="cbtn" id="c1-go">計算</button>
+    </div>
+    <div class="cout" id="c1-out"></div>
+    <p class="cnote">開始日を1日目として計算します（例：7/1開始の7日分 → 7/7まで）。</p>
+  </div>
+
+  <div class="calc">
+    <h3>残薬調整の計算</h3>
+    <div class="crow">
+      <div class="cfield"><label for="c2-rx">今回の処方日数</label><input type="number" id="c2-rx" min="1" inputmode="numeric"></div>
+      <div class="cfield"><label for="c2-zan">残薬（日分）</label><input type="number" id="c2-zan" min="0" inputmode="numeric"></div>
+      <button class="cbtn" id="c2-go">計算</button>
+    </div>
+    <div class="cout" id="c2-out"></div>
+    <p class="cnote">調整後日数 ＝ 処方日数 − 残薬日数。実際の調整は処方医への照会・合意のうえで行ってください。</p>
+  </div>
+
+  <div id="tpl-root"></div>
+</main>
+<footer><div class="fwrap">© 2026 ヤクデスク ｜ <a href="index.html#about">このサイトについて</a></div></footer>
+
+<script>
+'use strict';
+/* ============================================================
+   文例データ（追加するときはこの配列に足す）
+   cat：'疑義照会' / 'トレーシングレポート' / '供給・店頭対応'
+   ============================================================ */
+const TPLS = [
+{ cat:'疑義照会', title:'用法・用量の確認', use:'処方内容が添付文書の通常用量と異なる場合',
+  body:'いつもお世話になっております。【薬局名】薬剤師の【氏名】です。\n【患者名】様（【生年月日】）の本日の処方についてお伺いします。\n【薬剤名】が【処方内容】となっておりますが、添付文書上の通常用法・用量は【添付文書の記載】です。処方意図に基づくものでしたら、このまま調剤いたします。ご確認いただけますでしょうか。' },
+{ cat:'疑義照会', title:'併用薬との相互作用の確認', use:'他院処方・OTCとの併用注意を確認する場合',
+  body:'【患者名】様の処方について確認です。\n当薬局の記録では【併用薬名】（【処方元】）を服用中で、本日処方の【薬剤名】とは【相互作用の内容：併用注意等】に該当します。\n患者様の状況：【症状・検査値・服用状況など把握している事実】\nこのまま調剤してよろしいか、ご判断をお願いいたします。' },
+{ cat:'疑義照会', title:'重複投薬の確認', use:'同一成分・同効薬の重複が疑われる場合',
+  body:'【患者名】様の処方について確認です。\n本日処方の【薬剤名A】と、【処方元】から処方されている【薬剤名B】は【同一成分／同効薬】にあたります。\n重複を避けるため、本日の【薬剤名A】の要否についてご確認いただけますでしょうか。' },
+{ cat:'疑義照会', title:'残薬に伴う日数調整の提案', use:'残薬確認後、日数短縮を提案する場合',
+  body:'【患者名】様の処方について提案です。\n残薬を確認したところ、【薬剤名】が約【残薬日数】日分残っております（要因：【飲み忘れ／自己調整／中止歴など】）。\nつきましては、今回の処方日数を【処方日数】日分から【調整後日数】日分に調整いただくことは可能でしょうか。残薬要因への対応として【服薬支援の内容】を実施いたします。' },
+{ cat:'疑義照会', title:'出荷調整に伴う代替薬変更の提案', use:'限定出荷・出荷停止で調剤できない場合',
+  body:'【患者名】様の処方についてご相談です。\n【薬剤名・規格】は現在メーカー出荷調整中のため、当薬局および近隣で入手が困難な状況です。\nつきましては、以下のいずれかへの変更をご検討いただけますでしょうか。\n案1：【同一成分の他社品（規格・剤形）】\n案2：【同種同効薬など】\nご指示をいただければ、患者様への説明は当薬局で行います。' },
+{ cat:'トレーシングレポート', title:'アドヒアランス（服薬状況）の情報提供', use:'飲み忘れ・自己調整が判明した場合（緊急性なし）',
+  body:'【宛先医療機関・診療科・医師名】\n服薬情報提供書（トレーシングレポート）\n患者：【患者名】様（【生年月日】）\n\n【情報提供の内容】\n服薬状況の確認において、【薬剤名】の服用が【実際の服薬状況：頻度・タイミング等】であることを確認しました。\n要因：【患者の訴え・生活背景】\n\n【薬局の対応】\n【一包化提案／服薬カレンダー／用法の再説明 等】を実施しました。\n\n次回診察時の処方設計のご参考として情報提供いたします。' },
+{ cat:'トレーシングレポート', title:'副作用が疑われる症状の情報提供', use:'緊急性のない副作用疑いの共有（緊急時は電話照会）',
+  body:'【宛先】\n服薬情報提供書（トレーシングレポート）\n患者：【患者名】様（【生年月日】）\n\n【情報提供の内容】\n【薬剤名】の服用開始（【開始時期】）以降、【症状の内容・程度・出現時期】との訴えがありました。\n現時点で緊急性は低いと判断していますが、副作用の可能性も考慮し情報提供いたします。\n\n【薬局の対応】\n症状悪化時は服用を中止し受診するよう説明しました。次回診察時のご評価をお願いいたします。' },
+{ cat:'トレーシングレポート', title:'OTC・サプリメント併用の情報提供', use:'併用の事実を処方医と共有する場合',
+  body:'【宛先】\n服薬情報提供書（トレーシングレポート）\n患者：【患者名】様（【生年月日】）\n\n【情報提供の内容】\n患者様より、【OTC・サプリメント名】を【使用状況：頻度・目的】で使用しているとの申し出がありました。\n処方中の【薬剤名】との関係：【相互作用・重複の有無、確認した内容】\n\n【薬局の対応】\n【継続可否の説明／使用中止の提案 等】を行いました。処方設計のご参考としてお知らせいたします。' },
+{ cat:'トレーシングレポート', title:'服用後フォローアップの報告', use:'服用期間中フォローで得た情報の共有',
+  body:'【宛先】\n服薬情報提供書（トレーシングレポート）\n患者：【患者名】様（【生年月日】）\n\n【情報提供の内容】\n【フォロー日】に電話等でフォローアップを実施しました。\n・症状の経過：【改善／不変／悪化とその内容】\n・服薬状況：【継続できているか】\n・その他の訴え：【あれば】\n\n【薬局の対応】\n【実施した指導・助言】。引き続き経過を確認し、変化があれば改めてご報告いたします。' },
+{ cat:'供給・店頭対応', title:'供給不足に関する店頭掲示文', use:'出荷調整の影響を患者に周知する掲示',
+  body:'医薬品の供給不足に関するお知らせ\n\n現在、全国的な医薬品の供給不足により、一部のお薬についてメーカーからの出荷が調整されています。\nこの影響で、いつもと異なるメーカーのお薬（同じ成分）への変更や、日数の調整、お渡しまでにお時間をいただく場合がございます。\n変更の際は薬剤師よりご説明いたしますので、ご不明な点はお気軽にお尋ねください。\nご不便をおかけしますが、ご理解のほどお願い申し上げます。\n\n【薬局名】' },
+{ cat:'供給・店頭対応', title:'代替薬変更時の患者説明トーク', use:'同一成分他社品へ変更する際の口頭説明の型',
+  body:'本日から、お薬の見た目（メーカー）が変わっています。\n中身の成分・規格はこれまでと同じ【成分名・規格】で、効き目は変わりません。\n現在、メーカーの出荷調整により従来品の入荷が難しいため、処方の先生にも確認のうえで変更しています。\n飲み始めて気になることがあれば、いつでもご連絡ください。' },
+{ cat:'供給・店頭対応', title:'近隣薬局への在庫確認（譲受依頼）', use:'小分け・譲渡を依頼する際の電話・FAXの型',
+  body:'いつもお世話になっております。【薬局名】の【氏名】です。\n【薬剤名・規格】について、出荷調整の影響で在庫が確保できず、患者様への調剤に必要な【数量】が不足しております。\nもし在庫に余裕がございましたら、譲渡をご相談させていただけないでしょうか。\n必要書類（医薬品譲受・譲渡の記録）は当方で準備いたします。' }
+];
+
+/* ============================================================
+   描画・コピー・計算（通常は編集不要）
+   ============================================================ */
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const CATS = [
+  { name:'疑義照会', en:'INQUIRY' },
+  { name:'トレーシングレポート', en:'TRACING REPORT' },
+  { name:'供給・店頭対応', en:'SUPPLY & FRONT' }
+];
+const root = document.getElementById('tpl-root');
+root.innerHTML = CATS.map(c => {
+  const items = TPLS.filter(t => t.cat === c.name);
+  return '<h2 class="sec">' + esc(c.name) + ' <span class="en">' + esc(c.en) + '</span></h2>' +
+    items.map((t,i) => {
+      const gid = c.en.replace(/\s/g,'') + '-' + i;
+      return '<div class="tpl"><div class="tpl-head"><h3>' + esc(t.title) + '</h3>' +
+        '<button class="copybtn" data-copy="' + gid + '">コピー</button></div>' +
+        '<pre id="' + gid + '">' + esc(t.body) + '</pre>' +
+        '<p class="use">使いどころ：' + esc(t.use) + '</p></div>';
+    }).join('');
+}).join('');
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('.copybtn');
+  if (!b) return;
+  const text = document.getElementById(b.dataset.copy).textContent;
+  const done = () => { b.textContent = 'コピーしました'; b.classList.add('done');
+    setTimeout(() => { b.textContent = 'コピー'; b.classList.remove('done'); }, 1600); };
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+  } else { fallbackCopy(text, done); }
+});
+function fallbackCopy(text, done){
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); done(); } catch(e){ alert('コピーできませんでした。長押しで選択してコピーしてください。'); }
+  document.body.removeChild(ta);
+}
+
+/* 計算機 */
+const fmt = d => {
+  const w = ['日','月','火','水','木','金','土'][d.getDay()];
+  return d.getFullYear() + '年' + (d.getMonth()+1) + '月' + d.getDate() + '日（' + w + '）';
+};
+document.getElementById('c1-go').addEventListener('click', () => {
+  const s = document.getElementById('c1-start').value;
+  const n = parseInt(document.getElementById('c1-days').value, 10);
+  const out = document.getElementById('c1-out');
+  if (!s || !n || n < 1){ out.textContent = '開始日と日数を入力してください。'; out.classList.add('show'); return; }
+  const d = new Date(s + 'T00:00:00');
+  d.setDate(d.getDate() + n - 1);
+  out.textContent = '服用終了日：' + fmt(d) + '（' + n + '日分）';
+  out.classList.add('show');
+});
+document.getElementById('c2-go').addEventListener('click', () => {
+  const rx = parseInt(document.getElementById('c2-rx').value, 10);
+  const zan = parseInt(document.getElementById('c2-zan').value, 10);
+  const out = document.getElementById('c2-out');
+  if (!rx || rx < 1 || isNaN(zan) || zan < 0){ out.textContent = '処方日数と残薬日数を入力してください。'; out.classList.add('show'); return; }
+  if (zan >= rx){ out.textContent = '残薬が処方日数以上あります。今回処方の要否を含めて処方医に照会してください。'; out.classList.add('show'); return; }
+  out.textContent = '調整後日数の目安：' + (rx - zan) + '日分（' + rx + '日分 − 残薬' + zan + '日分）';
+  out.classList.add('show');
+});
+</script>
+</body>
+</html>
