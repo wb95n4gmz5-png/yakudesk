@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="令和8年度調剤報酬改定の疑義解釈資料の追い方を薬局向けに解説。告示→留意事項通知→疑義解釈の読む順番、発出状況（その1〜その7）、週5分の確認ルーチンまで。">
+<meta name="theme-color" content="#fbfbf9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#101613" media="(prefers-color-scheme: dark)">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>令和8年度改定｜疑義解釈の追い方 完全ガイド（発出状況つき）｜ヤクデスク</title>
+<style>
+:root{
+  --paper:#fbfbf9; --card:#ffffff; --ink:#17211d; --muted:#5c6862;
+  --green:#0b7a53; --green-soft:#e7f2ec; --blue-soft:#edf3f8; --blue:#3d6a8f;
+  --amber:#a35c0a; --amber-soft:#fbf1e2; --line:#e4e6e3; --line-strong:#c9cdc9;
+  --serif:"Hiragino Mincho ProN","Hiragino Mincho Pro","Yu Mincho","YuMincho","Noto Serif JP",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Yu Gothic","Noto Sans JP",sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --paper:#101613; --card:#171f1b; --ink:#eef2ef; --muted:#9aa69f;
+    --green:#43bf8f; --green-soft:#12271f; --blue-soft:#16222b; --blue:#8db4d4;
+    --amber:#dfa04a; --amber-soft:#2a2013; --line:#2a332e; --line-strong:#3b463f; }
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans);
+  font-size:16px; line-height:1.9; -webkit-font-smoothing:antialiased}
+a{color:var(--green)}
+:focus-visible{outline:2px solid var(--green); outline-offset:2px}
+header{position:sticky; top:0; background:color-mix(in srgb, var(--paper) 88%, transparent);
+  -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); z-index:10}
+.hwrap{max-width:720px; margin:0 auto; padding:10px 20px; display:flex; align-items:center; gap:9px}
+.hwrap svg{width:20px; height:20px; fill:var(--green)}
+.hwrap a{font-family:var(--serif); font-size:1.1rem; font-weight:600; letter-spacing:.12em;
+  color:var(--ink); text-decoration:none; display:flex; align-items:center; gap:9px}
+main{max-width:720px; margin:0 auto; padding:30px 20px 70px}
+.meta{font-family:var(--mono); font-size:.72rem; color:var(--muted); letter-spacing:.05em}
+.tagchip{display:inline-block; font-size:.68rem; background:var(--green-soft); color:var(--green);
+  border-radius:99px; padding:1px 9px; margin-left:8px; vertical-align:1px}
+h1{font-family:var(--serif); font-weight:600; font-size:clamp(1.4rem,4.5vw,1.85rem);
+  letter-spacing:.04em; line-height:1.6; margin:8px 0 14px}
+.leadbox{background:var(--blue-soft); border-radius:12px; padding:14px 17px; font-size:.9rem; margin-bottom:26px}
+h2{font-family:var(--serif); font-weight:600; font-size:1.12rem; letter-spacing:.06em;
+  margin:40px 0 12px; padding-bottom:8px; border-bottom:3px double var(--line-strong)}
+p{margin:12px 0}
+ul,ol{margin:12px 0; padding-left:24px}
+li{margin:5px 0}
+table{width:100%; border-collapse:collapse; font-size:.86rem; margin:14px 0}
+th,td{border:1px solid var(--line); padding:9px 11px; text-align:left; vertical-align:top}
+th{background:var(--card); font-family:var(--mono); font-size:.72rem; letter-spacing:.06em; color:var(--muted); white-space:nowrap}
+.flow{display:flex; flex-direction:column; gap:6px; margin:14px 0}
+.flow span{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:10px 14px; font-size:.88rem}
+.flow span b{color:var(--green)}
+.callout{background:var(--amber-soft); border-radius:12px; padding:12px 16px; font-size:.86rem; margin:16px 0}
+.src{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 17px; font-size:.82rem; margin-top:30px}
+.src p{margin:4px 0}
+.back{display:inline-block; margin-top:34px; font-size:.88rem}
+footer{border-top:1px solid var(--line)}
+.fwrap{max-width:720px; margin:0 auto; padding:20px; font-size:.74rem; color:var(--muted)}
+.fwrap a{color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <a href="index.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/></svg>ヤクデスク</a>
+  </div>
+</header>
+<main>
+<article>
+  <p class="meta">2026-07-17 更新<span class="tagchip">解説</span><span class="tagchip">令和8年度改定</span></p>
+  <h1>令和8年度改定｜疑義解釈の追い方 完全ガイド（発出状況つき）</h1>
+
+  <div class="leadbox">改定年に現場で差がつくのは、点数を暗記していることではなく、<b>「原本に最短でたどり着けること」</b>です。この記事では、疑義解釈資料の位置づけ・読む順番・令和8年度の発出状況・週5分の確認ルーチンを、1ページにまとめます。</div>
+
+  <h2>疑義解釈とは何か</h2>
+  <p>「疑義解釈資料の送付について」は、診療報酬の告示・通知の解釈について、厚生労働省保険局医療課がQ&amp;A形式で示す<b>事務連絡</b>です。算定要件や届出の細かい取扱いは、告示・通知の本文だけでは判断しきれないことが多く、疑義解釈で初めて実務上の答えが確定するケースが少なくありません。改定年は特に、この文書を追えているかどうかが算定精度に直結します。</p>
+
+  <h2>読む順番：告示 → 留意事項通知 → 疑義解釈</h2>
+  <div class="flow">
+    <span><b>① 点数表（告示）</b>── 点数と算定要件の大枠。令和8年度は「診療報酬の算定方法の一部を改正する件」（令和8年厚生労働省告示第69号）に調剤点数表が含まれます。</span>
+    <span><b>② 留意事項通知</b>── 告示の運用ルール。「実施上の留意事項について」（令和8年3月5日 保医発0305第6号）の調剤点数表部分を確認します。</span>
+    <span><b>③ 疑義解釈（事務連絡）</b>── ①②で判断に迷う点のQ&amp;A。改定後も（その1）（その2）…と随時追加されます。</span>
+  </div>
+  <p>新人スタッフに教えるときもこの順番が有効です。「疑義解釈から読む」と前提を誤解しやすいため、必ず①②の該当箇所とセットで確認します。</p>
+
+  <h2>令和8年度の発出状況（主要トピック抜粋）</h2>
+  <table>
+    <tr><th>発出日</th><th>文書</th><th>調剤関連の主なトピック（抜粋）</th></tr>
+    <tr><td>2026-03-05</td><td>告示・通知一式</td><td>調剤点数表（告示第69号）、留意事項通知（保医発0305第6号）、施設基準等が厚労省の改定ページに一括掲載</td></tr>
+    <tr><td>2026-03-23</td><td>疑義解釈（その1）</td><td>調剤ベースアップ評価料の対象職員の取扱い（管理薬剤師の扱い等）ほか</td></tr>
+    <tr><td>2026-04-20</td><td>疑義解釈（その3）</td><td>地域支援・医薬品供給対応体制加算の取扱い（研究用試薬等の販売の可否）ほか</td></tr>
+    <tr><td>〜2026-06-01時点</td><td>疑義解釈（その7）まで発出</td><td>以降も随時追加されるため、定期確認が必要</td></tr>
+  </table>
+  <div class="callout">本表は把握用の抜粋です。<b>算定・届出の判断は、必ず厚生労働省ページの原本（PDF）を確認してから</b>行ってください。疑義解釈の番号は医科・歯科・調剤を通した連番のため、調剤に関係する問が含まれない回もあります。</div>
+
+  <h2>週5分の確認ルーチン</h2>
+  <ol>
+    <li>厚労省「令和8年度診療報酬改定」ページをブックマークし、週1回開く（下記の出典リンク）。</li>
+    <li>「疑義解釈資料の送付について」の新着（その◯）が増えていないかを確認する。</li>
+    <li>新着があれば、調剤点数表に関する問だけを拾い読みする。</li>
+    <li>自局の算定項目に関わる問があれば、原本PDFの該当ページを印刷またはスクリーンショットで薬局内共有（朝礼・チャット）。</li>
+    <li>共有した内容と日付を業務記録に残す（個別指導対策としても有効）。</li>
+  </ol>
+
+  <h2>よくある落とし穴</h2>
+  <ul>
+    <li><b>二次情報だけで算定判断をする</b>── 解説記事（本記事を含む）は把握のための入口です。判断の根拠は常に原本に置きます。</li>
+    <li><b>疑義解釈だけ読む</b>── 前提となる告示・通知の該当箇所とセットで読まないと、問の意味を取り違えます。</li>
+    <li><b>様式・届出を厚労省ページで探す</b>── 施設基準の届出様式や提出先は、管轄の地方厚生局ページで確認します。</li>
+  </ul>
+
+  <div class="src">
+    <p><b>出典・一次情報</b></p>
+    <p>・厚生労働省「令和8年度診療報酬改定について」（告示・通知・疑義解釈資料の掲載ページ）<br>
+    <a href="https://www.mhlw.go.jp/stf/newpage_67729.html" target="_blank" rel="noopener noreferrer">https://www.mhlw.go.jp/stf/newpage_67729.html</a></p>
+    <p>・地方厚生局（届出様式・改定時集団指導）<br>
+    <a href="https://kouseikyoku.mhlw.go.jp/" target="_blank" rel="noopener noreferrer">https://kouseikyoku.mhlw.go.jp/</a></p>
+  </div>
+
+  <p class="meta" style="margin-top:22px">免責：本記事は作成時点の情報の整理であり、算定・調剤の最終判断は原本に基づいて行ってください。誤りのご指摘は運営者情報の連絡先までお願いします。</p>
+
+  <a class="back" href="index.html">← ヤクデスクのトップへ戻る</a>
+</article>
+</main>
+<footer><div class="fwrap">© 2026 ヤクデスク ｜ <a href="index.html#about">このサイトについて</a></div></footer>
+</body>
+</html>
